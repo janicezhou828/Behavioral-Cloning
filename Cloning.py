@@ -4,6 +4,8 @@ import numpy as np
 import keras
 from keras.models import Sequential
 from keras.layers import Flatten, Dense, Lambda
+from keras.layers.convolutional import Convolution2D
+from keras.layers.pooling import MaxPooling2D
 
 lines = []
 with open ('./Data/Round1/driving_log.csv') as csvfile:
@@ -37,15 +39,24 @@ y_train = y_train_st.astype(np.float)
 
 model = Sequential()
 model.add(Lambda(lambda x: x/255.0-0.5, input_shape=(160,320,3)))
-model.add(Flatten(input_shape=(160,320,3)))
+
+
+model.add(Convolution2D(6,5,5,activation = 'relu'))
+model.add(MaxPooling2D())
+model.add(Convolution2D(16,5,5,activation = 'relu'))
+model.add(MaxPooling2D())
+model.add(Flatten())
+model.add(Dense(120))
+model.add(Dense(84))
 model.add(Dense(1))
 
 model.compile(optimizer='adam',loss='mse')
-model.fit(X_train,y_train,validation_split = 0.2 , shuffle = True, epochs = 10)
+model.fit(X_train,y_train,validation_split = 0.2 , shuffle = True, epochs = 5)
 
 # Test model: 1 layer NN
 # Model 1: 1 layer NN + Lambda (normalization)
-# Model 2: Add Conv Layer
-model.save('testmodel2.h5')
+# Model 2: Implement LeNet
+# Model 3: 
+model.save('model3.h5')
 
 
