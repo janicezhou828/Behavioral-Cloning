@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 import keras
 from keras.models import Sequential
-from keras.layers import Flatten, Dense
+from keras.layers import Flatten, Dense, Lambda
 
 lines = []
 with open ('./Data/Round1/driving_log.csv') as csvfile:
@@ -36,12 +36,16 @@ y_train = y_train_st.astype(np.float)
 
 
 model = Sequential()
+model.add(Lambda(lambda x: x/255.0-0.5, input_shape=(160,320,3)))
 model.add(Flatten(input_shape=(160,320,3)))
 model.add(Dense(1))
 
 model.compile(optimizer='adam',loss='mse')
 model.fit(X_train,y_train,validation_split = 0.2 , shuffle = True, epochs = 10)
 
-model.save('testmodel.h5')
+# Test model: 1 layer NN
+# Model 1: 1 layer NN + Lambda (normalization)
+# Model 2: Add Conv Layer
+model.save('testmodel2.h5')
 
 
