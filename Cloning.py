@@ -16,25 +16,29 @@ images = []
 measurements = []
 
 for line in lines:
-	source_path = line[0]
-	tokens = source_path.split('\\')
-	filename = tokens[-1]
-	local_path = "./Data/Round1/IMG/" + filename
-	image = cv2.imread(local_path)
-	images.append(image)
+	for i in range (3):
+		source_path = line [i]
+		tokens = source_path.split('\\')
+		filename = tokens[-1]
+		local_path = "./Data/Round1/IMG/" + filename
+		image = cv2.imread(local_path)
+		images.append(image)
+	correction = 0.2
 	measurement = line[3]
-	measurements.append(measurement)
+	measurements.append(float(measurement))
+	measurements.append(float(measurement)+correction)
+	measurements.append(float(measurement)-correction)
 
 augmented_images = []
 augmented_measurements = []
 
 for image, measurement in zip(images, measurements):
 	augmented_images.append(image)
-	measurement_fl = float (measurement)
-	augmented_measurements.append(measurement_fl)
+	#measurement_fl = float (measurement)
+	augmented_measurements.append(measurement)
 	
 	flipped_image = cv2.flip(image, 1)
-	flipped_measurement = measurement_fl* (-1.0)
+	flipped_measurement = measurement* (-1.0)
 
 	augmented_images.append(flipped_image)
 	augmented_measurements.append(flipped_measurement)
@@ -49,6 +53,7 @@ y_train = np.array (augmented_measurements)
 #print (X_train.shape)
 #print (y_train.shape)
 #print (y_train)
+#print (type(y_train[2]))
 #exit ()
 
 model = Sequential()
@@ -65,12 +70,13 @@ model.add(Dense(84))
 model.add(Dense(1))
 
 model.compile(optimizer='adam',loss='mse')
-model.fit(X_train,y_train,validation_split = 0.2 , shuffle = True, epochs = 5)
+model.fit(X_train,y_train,validation_split = 0.2 , shuffle = True, epochs = 3)
 
 # Test model: 1 layer NN
 # Model 1: 1 layer NN + Lambda (normalization)
 # Model 2: Implement LeNet
 # Model 3: Augment data by flipping
-model.save('model3.h5')
+# Model 4: Use left and right cameras
+model.save('model4.h5')
 
 
