@@ -25,17 +25,31 @@ for line in lines:
 	measurement = line[3]
 	measurements.append(measurement)
 
-#print (len(images))
+augmented_images = []
+augmented_measurements = []
 
+for image, measurement in zip(images, measurements):
+	augmented_images.append(image)
+	measurement_fl = float (measurement)
+	augmented_measurements.append(measurement_fl)
 	
-X_train = np.array(images)
-y_train_st = np.array (measurements)
-y_train = y_train_st.astype(np.float)
+	flipped_image = cv2.flip(image, 1)
+	flipped_measurement = measurement_fl* (-1.0)
 
+	augmented_images.append(flipped_image)
+	augmented_measurements.append(flipped_measurement)
+	#exit ()
+
+X_train = np.array(augmented_images)
+y_train = np.array (augmented_measurements)
+
+# To print the whole array for inspection
+#import sys
+#np.set_printoptions(threshold=sys.maxsize)
 #print (X_train.shape)
-#print (y_train)
 #print (y_train.shape)
-
+#print (y_train)
+#exit ()
 
 model = Sequential()
 model.add(Lambda(lambda x: x/255.0-0.5, input_shape=(160,320,3)))
@@ -56,7 +70,7 @@ model.fit(X_train,y_train,validation_split = 0.2 , shuffle = True, epochs = 5)
 # Test model: 1 layer NN
 # Model 1: 1 layer NN + Lambda (normalization)
 # Model 2: Implement LeNet
-# Model 3: 
+# Model 3: Augment data by flipping
 model.save('model3.h5')
 
 
