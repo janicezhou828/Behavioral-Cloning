@@ -4,7 +4,7 @@ import numpy as np
 import keras
 from keras.models import Sequential
 from keras.layers import Flatten, Dense, Lambda
-from keras.layers.convolutional import Convolution2D
+from keras.layers.convolutional import Convolution2D, Cropping2D
 from keras.layers.pooling import MaxPooling2D
 
 lines = []
@@ -59,7 +59,7 @@ y_train = np.array (augmented_measurements)
 model = Sequential()
 model.add(Lambda(lambda x: x/255.0-0.5, input_shape=(160,320,3)))
 
-
+model.add(Cropping2D(cropping = ((60,0),(0,0))))
 model.add(Convolution2D(6,5,5,activation = 'relu'))
 model.add(MaxPooling2D())
 model.add(Convolution2D(16,5,5,activation = 'relu'))
@@ -70,13 +70,14 @@ model.add(Dense(84))
 model.add(Dense(1))
 
 model.compile(optimizer='adam',loss='mse')
-model.fit(X_train,y_train,validation_split = 0.2 , shuffle = True, epochs = 3)
+model.fit(X_train,y_train,validation_split = 0.2 , shuffle = True, epochs = 5)
 
 # Test model: 1 layer NN
 # Model 1: 1 layer NN + Lambda (normalization)
 # Model 2: Implement LeNet
 # Model 3: Augment data by flipping
 # Model 4: Use left and right cameras
-model.save('model4.h5')
+# Mdoel 5: Cropping 
+model.save('model5.h5')
 
 
