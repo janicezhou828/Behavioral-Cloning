@@ -4,7 +4,7 @@ import numpy as np
 import keras
 from keras.models import Sequential
 from keras.layers import Flatten, Dense, Lambda
-from keras.layers.convolutional import Convolution2D, Cropping2D
+from keras.layers.convolutional import Conv2D, Convolution2D, Cropping2D
 from keras.layers.pooling import MaxPooling2D
 
 lines = []
@@ -59,15 +59,35 @@ y_train = np.array (augmented_measurements)
 model = Sequential()
 model.add(Lambda(lambda x: x/255.0-0.5, input_shape=(160,320,3)))
 
-model.add(Cropping2D(cropping = ((60,0),(0,0))))
-model.add(Convolution2D(6,5,5,activation = 'relu'))
-model.add(MaxPooling2D())
-model.add(Convolution2D(16,5,5,activation = 'relu'))
-model.add(MaxPooling2D())
+model.add(Cropping2D(cropping = ((70,25),(0,0))))
+model.add(Conv2D(24, (5, 5), strides = (2,2), activation="relu"))
+model.add(Conv2D(36, (5, 5), strides = (2,2), activation="relu"))
+model.add(Conv2D(48, (5, 5), strides = (2,2), activation="relu"))
+model.add(Conv2D(64, (3, 3), activation="relu"))
+model.add(Conv2D(64, (3, 3), activation="relu"))
+
+#model.add(Convolution2D(24,5,5,strides = (2,2), activation = 'relu'))
+#model.add(Convolution2D(36,5,5,strides = (2,2),activation = 'relu'))
+#model.add(Convolution2D(48,5,5,strides = (2,2),activation = 'relu'))
+#model.add(Convolution2D(64,3,3,activation = 'relu'))
+#model.add(Convolution2D(64,3,3,activation = 'relu'))
+
 model.add(Flatten())
-model.add(Dense(120))
-model.add(Dense(84))
+model.add(Dense(100))
+model.add(Dense(50))
+model.add(Dense(10))
 model.add(Dense(1))
+
+# LeNet
+#model.add(Cropping2D(cropping = ((60,0),(0,0))))
+#model.add(Convolution2D(6,5,5,activation = 'relu'))
+#model.add(MaxPooling2D())
+#model.add(Convolution2D(16,5,5,activation = 'relu'))
+#model.add(MaxPooling2D())
+#model.add(Flatten())
+#model.add(Dense(120))
+#model.add(Dense(84))
+#model.add(Dense(1))
 
 model.compile(optimizer='adam',loss='mse')
 model.fit(X_train,y_train,validation_split = 0.2 , shuffle = True, epochs = 5)
@@ -78,6 +98,8 @@ model.fit(X_train,y_train,validation_split = 0.2 , shuffle = True, epochs = 5)
 # Model 3: Augment data by flipping
 # Model 4: Use left and right cameras
 # Mdoel 5: Cropping 
-model.save('model5.h5')
+# Model 6: Implement Nvidia end to end learning 
+model.save('model6.h5')
 
 
+ 
