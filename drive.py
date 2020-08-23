@@ -1,3 +1,5 @@
+# Import packages
+
 import argparse
 import base64
 from datetime import datetime
@@ -21,7 +23,7 @@ app = Flask(__name__)
 model = None
 prev_image_array = None
 
-
+# PI Controller
 class SimplePIController:
     def __init__(self, Kp, Ki):
         self.Kp = Kp
@@ -42,7 +44,7 @@ class SimplePIController:
 
         return self.Kp * self.error + self.Ki * self.integral
 
-
+# Set up controller and speed
 controller = SimplePIController(0.1, 0.002)
 set_speed = 9
 controller.set_desired(set_speed)
