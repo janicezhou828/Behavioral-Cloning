@@ -14,7 +14,7 @@ These are the main steps of the project:
 
 [//]: # (Image References)
 
-[image1]: ./Images/Train.png "Training"
+[image1]: ./Images/Train.PNG "Training"
 [image2]: ./Images/NVIDIA.png "Model"
 
 
